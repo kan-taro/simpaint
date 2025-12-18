@@ -25,6 +25,10 @@ Vanilla JavaScript と Tailwind CSS を使い、シンプルかつモダンな U
 
 ## 📦 取得方法
 
+1.以下のウェブサイトで使う
+https://kan-taro.github.io/simpaint/
+
+2.ローカルで使う
 インストール不要です。リポジトリをクローンまたは ZIP をダウンロードして `index.html` を開くだけ。
 
 ```bash
