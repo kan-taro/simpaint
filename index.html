@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8"/>
+<title>ペイントアプリ</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  body{margin:0;font-family:sans-serif;background:linear-gradient(135deg,#00e5ff,#4a90e2);}
+  canvas{display:block;}
+  .toolbar{
+    position:absolute;top:20px;left:50%;transform:translateX(-50%);
+    background:rgba(255,255,255,.85);
+    backdrop-filter:blur(10px);border-radius:9999px;padding:.5rem 1rem;
+    display:flex;gap:.75rem;align-items:center;
+    box-shadow:0 2px 8px rgba(0,0,0,.15);
+  }
+  .color-picker{width:32px;height:32px;border-radius:50%;border:2px solid #fff;}
+</style>
+</head>
+<body>
+<div class="toolbar">
+<select id="tool-select" class="bg-white rounded border p-1">
+<option value="pen">ペン</option>
+<option value="circle">丸</option>
+<option value="triangle">三角</option>
+<option value="rect">四角</option>
+<option value="arrow">矢印</option>
+<option value="polygon">多角形</option>
+<option value="text">文字</option>
+</select>
+<input type="color" id="color-picker" class="color-picker"/>
+<button id="undo-btn" class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600 transition-colors" disabled>戻る</button>
+<button id="redo-btn" class="bg-purple-500 text-white px-3 py-1 rounded hover:bg-purple-600 transition-colors" disabled>進む</button>
+<button id="clear-btn" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition-colors">全消し</button>
+<button id="copy-btn" class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 transition-colors">コピー</button>
+</div>
+<canvas id="paint-canvas"></canvas>
+<script src="script.js"></script>
+</body>
+</html>
