@@ -4,6 +4,7 @@
   let drawing=false;
   let tool='pen';
   let color='#000000';
+  let lineWidth=2; // default pen width
   let start={x:0,y:0};
   let polygonPoints=[];
 
@@ -37,9 +38,16 @@
   }
 
   function resizeCanvas(){
+    // Preserve existing drawing by saving it as an image
+    const oldDataURL = canvas.toDataURL();
     canvas.width=window.innerWidth;
     canvas.height=window.innerHeight;
-    // After resizing, capture empty state
+    const img=new Image();
+    img.onload=function(){
+      ctx.drawImage(img,0,0);
+    };
+    img.src=oldDataURL;
+    // Record new state after resize
     pushState();
   }
   window.addEventListener('resize',resizeCanvas);
@@ -50,6 +58,7 @@
     if(tool==='polygon') polygonPoints=[]; // reset points when selecting
   });
   document.getElementById('color-picker').addEventListener('input',(e)=>{color=e.target.value});
+  document.getElementById('stroke-width-select').addEventListener('change',(e)=>{lineWidth=parseInt(e.target.value)});
 
   // For shape preview during drag
   let previewSnapshot=null;
@@ -87,7 +96,7 @@
     if(['circle','rect','triangle','arrow'].includes(tool) && previewSnapshot){
       ctx.clearRect(0,0,canvas.width,canvas.height);
       ctx.drawImage(previewSnapshot,0,0);
-      ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=2;
+      ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=lineWidth;
       if(tool==='circle'){
         const dx=x-start.x, dy=y-start.y;
         const r=Math.sqrt(dx*dx+dy*dy);
@@ -108,7 +117,7 @@
       return; // preview handled, skip pen logic
     }
 
-    ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=2;
+    ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=lineWidth;
     if(tool==='pen'){
       ctx.lineTo(x,y);ctx.stroke();
     }
@@ -119,7 +128,7 @@
     drawing=false;
     const rect=canvas.getBoundingClientRect();
     var x=e.clientX-rect.left, y=e.clientY-rect.top;
-    ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=2;
+    ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=lineWidth;
     if(tool==='circle'){
       const dx=x-start.x, dy=y-start.y;
       const r=Math.sqrt(dx*dx+dy*dy);
@@ -146,7 +155,7 @@
     const x=e.clientX-rect.left, y=e.clientY-rect.top;
     if(tool==='polygon'){
       polygonPoints.push({x,y});
-      ctx.strokeStyle=color;ctx.lineWidth=2;
+      ctx.strokeStyle=color;ctx.lineWidth=lineWidth;
       if(polygonPoints.length>1){
         const p=polygonPoints[polygonPoints.length-2];
         ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(x,y);ctx.stroke();
@@ -164,7 +173,7 @@
 
   function finalizePolygon(){
     if(tool!=='polygon' || polygonPoints.length<3) return;
-    ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=2;
+    ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=lineWidth;
     ctx.beginPath();
     const first=polygonPoints[0];
     ctx.moveTo(first.x,first.y);
